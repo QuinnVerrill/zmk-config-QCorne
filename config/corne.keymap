@@ -13,15 +13,31 @@
         compatible = "zmk,combos";
 
         gaymingk {
-            bindings = <&tog 4>;
+            bindings = <&tog 0>;
             key-positions = <36 25 41 34>;
+        };
+    };
+
+    behaviors {
+        numpad_tap_tog: numpad_tap_tog {
+            compatible = "zmk,behavior-tap-dance";
+            label = "NUMPAD_TAP_TOG";
+            #binding-cells = <0>;
+            bindings = <&mo 2>, <&tog 2>;
+        };
+
+        sys_tog_tap: sys_tog_tap {
+            compatible = "zmk,behavior-tap-dance";
+            label = "SYS_TOG_TAP";
+            #binding-cells = <0>;
+            bindings = <&mo 1>, <&tog 1>;
         };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
+        alphas {
             // -----------------------------------------------------------------------------------------
             // |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BKSP |
             // | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
@@ -29,14 +45,16 @@
             //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
 
             bindings = <
-&trans  &kp Q  &kp W  &kp D             &kp F  &kp G    &kp Y      &kp J  &kp K      &kp L    &kp P     &trans
-&trans  &kp A  &kp S  &kp E             &kp R  &kp T    &kp H      &kp U  &kp I      &kp O    &kp SEMI  &trans
-&trans  &kp Z  &kp X  &kp C             &kp V  &kp B    &kp N      &kp M  &kp COMMA  &kp DOT  &kp FSLH  &trans
-                      &kp LEFT_CONTROL  &sl 1  &mo 1    &kp SPACE  &mo 2  &kp ENTER
+&trans  &kp Q  &kp W  &kp D             &kp F         &kp G             &kp Y      &kp J            &kp K      &kp L    &kp P     &trans
+&trans  &kp A  &kp S  &kp E             &kp R         &kp T             &kp H      &kp U            &kp I      &kp O    &kp SEMI  &trans
+&trans  &kp Z  &kp X  &kp C             &kp V         &kp B             &kp N      &kp M            &kp COMMA  &kp DOT  &kp FSLH  &trans
+                      &kp LEFT_CONTROL  &sys_tog_tap  &kp LEFT_SHIFT    &kp SPACE  &numpad_tap_tog  &kp ENTER
             >;
+
+            label = "alphas";
         };
 
-        lower_layer {
+        system_layer {
             // -----------------------------------------------------------------------------------------
             // |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BKSP |
             // | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   | LFT | DWN |  UP | RGT |     |      |
@@ -46,17 +64,17 @@
             bindings = <
 &trans  &kp ESCAPE    &kp HOME  &kp UP_ARROW  &kp END       &trans                &trans         &trans         &kp C_VOLUME_UP  &trans         &kp BACKSPACE  &trans
 &trans  &kp TAB       &kp LEFT  &kp DOWN      &kp RIGHT     &trans                &trans         &kp K_BACK     &kp C_VOL_DN     &kp K_FORWARD  &kp DELETE     &trans
-&trans  &kp CAPSLOCK  &trans    &trans        &sk LEFT_GUI  &mt K_COPY K_PASTE    &kp RIGHT_GUI  &kp RIGHT_GUI  &trans           &kp APOS       &kp ENTER      &trans
-                                &sk LEFT_ALT  &trans        &kp LEFT_SHIFT        &kp SPACE      &trans         &kp RALT
+&trans  &kp CAPSLOCK  &trans    &trans        &sk LEFT_GUI  &mt K_PASTE K_COPY    &kp RIGHT_GUI  &kp RIGHT_GUI  &trans           &kp APOS       &kp ENTER      &trans
+                                &sk LEFT_ALT  &trans        &kp LEFT_SHIFT        &kp SPACE      &tog 0         &kp ENTER
             >;
         };
 
         Numpad {
             bindings = <
-&trans  &trans  &trans  &trans         &trans                &trans                   &kp NUMBER_1  &kp NUMBER_2   &kp NUMBER_3  &kp MINUS     &kp BACKSPACE  &trans
-&trans  &trans  &trans  &kp BACKSLASH  &kp LEFT_BRACKET      &kp RIGHT_BRACKET        &kp NUMBER_4  &kp N5         &kp NUMBER_6  &kp EQUAL     &kp PLUS       &trans
-&trans  &trans  &trans  &trans         &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS    &kp N7        &kp NUMBER_8   &kp N9        &kp NUMBER_0  &kp ENTER      &trans
-                        &trans         &trans                &kp LEFT_SHIFT           &trans        &kp RIGHT_ALT  &trans
+&trans  &trans  &trans  &trans         &trans                &trans                   &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp MINUS     &kp BACKSPACE  &trans
+&trans  &trans  &trans  &kp BACKSLASH  &kp LEFT_BRACKET      &kp RIGHT_BRACKET        &kp NUMBER_4  &kp N5        &kp NUMBER_6  &kp EQUAL     &kp PLUS       &trans
+&trans  &trans  &trans  &trans         &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS    &kp N7        &kp NUMBER_8  &kp N9        &kp NUMBER_0  &kp ENTER      &trans
+                        &kp LEFT_ALT   &tog 0                &kp LEFT_SHIFT           &trans        &trans        &kp LEFT_ALT
             >;
 
             label = "Numpad";
@@ -71,15 +89,6 @@
             >;
 
             label = "Bluetooth_Controls";
-        };
-
-        layer_5 {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
-                        &trans  &trans  &trans    &trans  &trans  &trans
-            >;
         };
     };
 
